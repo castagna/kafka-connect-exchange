@@ -16,8 +16,6 @@ package dev;
 
 import java.util.List;
 
-import javax.swing.text.StyledEditorKit.ForegroundAction;
-
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
 import microsoft.exchange.webservices.data.core.service.item.Item;

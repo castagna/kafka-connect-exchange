@@ -32,6 +32,9 @@ public class ExchangeSourceConnectorConfigTest {
 	      ExchangeSourceConnectorConfig config = new ExchangeSourceConnectorConfig(properties2Map(properties));
 	      
 	      properties.containsKey(ExchangeSourceConnectorConfig.EXCHANGE_CREDENTIALS);
+	      properties.containsKey(ExchangeSourceConnectorConfig.EXCHANGE_URL);
+	      properties.containsKey(ExchangeSourceConnectorConfig.TOPIC_CONF);
+	      
 	      assertEquals("com.github.castagna.kafka.connect.exchange.ExchangeSourceConnector", properties.getProperty("connector.class"));
 	      assertEquals("./config/credentials.tsv", config.getCredentials());
 	}

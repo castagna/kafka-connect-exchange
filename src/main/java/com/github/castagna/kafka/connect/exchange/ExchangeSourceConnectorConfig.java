@@ -24,6 +24,8 @@ import org.apache.kafka.common.config.ConfigDef.Type;
 public class ExchangeSourceConnectorConfig extends AbstractConfig {
 
 	public static final String EXCHANGE_CREDENTIALS = "credentials";
+	public static final String EXCHANGE_URL = "url";
+	public static final String TOPIC_CONF = "topic";
 
 	public ExchangeSourceConnectorConfig(ConfigDef config, Map<String, String> parsedConfig) {
 		super(config, parsedConfig);
@@ -34,11 +36,23 @@ public class ExchangeSourceConnectorConfig extends AbstractConfig {
 	}
 
 	public static ConfigDef conf() {
-		return new ConfigDef().define(EXCHANGE_CREDENTIALS, Type.STRING, Importance.HIGH, "This is a TSV file containing on each line <email>, <password>");
+		return new ConfigDef()
+				.define(EXCHANGE_CREDENTIALS, Type.STRING, Importance.HIGH, "This is a TSV file containing on each line <email>, <password>, and <domain>")
+				.define(EXCHANGE_URL, Type.STRING, Importance.HIGH, "This is the URL of the Exchange server")
+				.define(TOPIC_CONF, ConfigDef.Type.STRING, ConfigDef.Importance.HIGH, "The Kafka topic to write data to")
+		;
 	}
 	
 	public String getCredentials() {
 		return getString(EXCHANGE_CREDENTIALS);
+	}
+	
+	public String getUrl() {
+		return getString(EXCHANGE_URL);
+	}
+	
+	public String getTopic() {
+		return getString(TOPIC_CONF);
 	}
 	
 }

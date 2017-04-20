@@ -31,7 +31,7 @@ public class StructExample {
 			.build();
 
 	public static final Schema VALUE_SCHEMA = SchemaBuilder.struct()
-			.name("com.github.CASTAGNA.kafka.connect.exchange.Conversation")
+			.name("com.github.castagna.kafka.connect.exchange.Conversation")
 			.field("from", SchemaBuilder.string().doc("The text of a conversation.").build())
 			.field("to", SchemaBuilder.string().doc("The text of a conversation.").build())
 			.field("cc", SchemaBuilder.string().doc("The text of a conversation.").optional().build())
