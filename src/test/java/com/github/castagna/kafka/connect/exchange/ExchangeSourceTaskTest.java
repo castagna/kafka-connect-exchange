@@ -54,11 +54,15 @@ public class ExchangeSourceTaskTest {
 	public void testCredentialsLoaded() {
 		assertFalse(task.emails.isEmpty());
 		assertFalse(task.passwords.isEmpty());
+		assertFalse(task.domains.isEmpty());
 		assertEquals(2, task.emails.size());
 		assertEquals(2, task.passwords.size());
+		assertEquals(2, task.domains.size());
 		assertEquals("paolo@domain.com", task.emails.get(0)); 
 		assertEquals("password1", task.passwords.get(0)); 
+		assertEquals("london", task.domains.get(0)); 
 		assertEquals("david@domain.com", task.emails.get(1)); 
 		assertEquals("password4", task.passwords.get(1)); 
+		assertEquals("madrid", task.domains.get(1)); 
 	}
 }
