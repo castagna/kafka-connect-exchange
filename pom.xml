@@ -63,6 +63,7 @@
         <kafka.version>0.10.2.0-cp1</kafka.version>
         <ews-java-api.version>2.0</ews-java-api.version>
         <junit.version>4.12</junit.version>
+        <slf4j.version>1.7.25</slf4j.version>
         <jdk.version>1.7</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -78,6 +79,12 @@
             <groupId>com.microsoft.ews-java-api</groupId>
             <artifactId>ews-java-api</artifactId>
             <version>${ews-java-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

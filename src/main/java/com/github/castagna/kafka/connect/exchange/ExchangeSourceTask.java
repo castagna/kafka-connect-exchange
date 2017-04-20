@@ -123,9 +123,13 @@ public class ExchangeSourceTask extends SourceTask {
 
 	        ExchangeCredentials credentials = new WebCredentials(email, password, domain);
 			service.setCredentials(credentials);
-			
+
             ChangeCollection<ItemChange> itemChanges;
 			try {
+		        Folder inbox = Folder.bind(service, WellKnownFolderName.Inbox, propertySet);
+		        folderId = inbox.getId();
+		        log.info ("Connected to folder {} at {}", folderId, config.getUrl());
+				
                 itemChanges = syncFolder(service, propertySet, folderId, watermarks.get(i));
                 log.info("Found {} emails starting from watermark {} ...", itemChanges.getCount(), watermarks.get(i));
 
@@ -156,16 +160,17 @@ public class ExchangeSourceTask extends SourceTask {
 	    Struct keyStruct = new Struct(KEY_SCHEMA);
 	    Struct valueStruct = new Struct(VALUE_SCHEMA);
 	    
-	    keyStruct.put("conversation_id", item.getConversationId());
+	    keyStruct.put("conversation_id", item.getConversationId().getUniqueId());
 	    
 	    // TODO: valueStruct.put("from", item.???);
-	    valueStruct.put("item_id", item.getId());
-	    valueStruct.put("conversation_id", item.getConversationId());
-	    valueStruct.put("to", item.getDisplayTo());
-	    valueStruct.put("cc", item.getDisplayCc());
-	    valueStruct.put("subject", item.getSubject());
-	    valueStruct.put("body", item.getBody());
-	    valueStruct.put("date", item.getDateTimeSent());
+	    valueStruct.put("item_id", item.getId().getUniqueId());
+	    valueStruct.put("conversation_id", item.getConversationId().getUniqueId());
+	    
+	    setIfNotNull(valueStruct, "to", item.getDisplayTo());
+	    setIfNotNull(valueStruct, "cc", item.getDisplayCc());
+	    setIfNotNull(valueStruct, "subject", item.getSubject());
+	    setIfNotNull(valueStruct, "body", item.getBody());
+	    setIfNotNull(valueStruct, "date", item.getDateTimeSent());
 
 	    SourceRecord record = new SourceRecord(EMPTY_MAP, EMPTY_MAP, config.getTopic(), KEY_SCHEMA, keyStruct, VALUE_SCHEMA, valueStruct);
 	    if (log.isDebugEnabled()) {
@@ -174,6 +179,12 @@ public class ExchangeSourceTask extends SourceTask {
 	    return record;
 	}
 
+	private void setIfNotNull (Struct struct, String fieldname, Object value) {
+		if (value != null) {
+			struct.put(fieldname, value);
+		}
+	}
+	
     private ChangeCollection<ItemChange> syncFolder(ExchangeService service, PropertySet propertySet, FolderId folderId, String watermark) throws Exception {
         return service.syncFolderItems(folderId, propertySet, null, 256, SyncFolderItemsScope.NormalAndAssociatedItems, watermark); // TODO: make the items returned configurable
     }
@@ -230,9 +241,6 @@ public class ExchangeSourceTask extends SourceTask {
 		service.setUrl(uri);
         propertySet = new PropertySet(BasePropertySet.FirstClassProperties);
         propertySet.setRequestedBodyType(BodyType.Text);
-        Folder inbox = Folder.bind(service, WellKnownFolderName.Inbox, propertySet);
-        folderId = inbox.getId();
-        log.info ("Connected to folder {} at {}", folderId, config.getUrl());
 	}
 	
 	private void initTrustManager() {
