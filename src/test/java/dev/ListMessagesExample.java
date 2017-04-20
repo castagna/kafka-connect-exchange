@@ -1,10 +1,29 @@
+/**
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package dev;
+
+import java.util.List;
+
+import javax.swing.text.StyledEditorKit.ForegroundAction;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
 import microsoft.exchange.webservices.data.core.service.item.Item;
 import microsoft.exchange.webservices.data.credential.ExchangeCredentials;
 import microsoft.exchange.webservices.data.credential.WebCredentials;
+import microsoft.exchange.webservices.data.property.complex.Attachment;
 import microsoft.exchange.webservices.data.property.complex.ConversationId;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
 import microsoft.exchange.webservices.data.search.ItemView;
@@ -23,6 +42,13 @@ public class ListMessagesExample {
 	        for(Item item : findResults.getItems()) {
 	            System.out.println(item.getSubject());
 	            System.out.println(item.getId());
+	            
+	            // ???
+	            List<Attachment> attachments = item.getAttachments().getItems();
+	            for (Attachment attachment : attachments) {
+					attachment.load();
+				}
+	            
 	            ConversationId conversationId = item.getConversationId();
 	            System.out.println(conversationId.getUniqueId());
 	        }
