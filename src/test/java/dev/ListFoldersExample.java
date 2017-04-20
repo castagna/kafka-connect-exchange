@@ -14,6 +14,9 @@
 
 package dev;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.property.BasePropertySet;
@@ -21,11 +24,21 @@ import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFo
 import microsoft.exchange.webservices.data.core.service.folder.Folder;
 import microsoft.exchange.webservices.data.credential.ExchangeCredentials;
 import microsoft.exchange.webservices.data.credential.WebCredentials;
+import microsoft.exchange.webservices.data.property.complex.FolderId;
 import microsoft.exchange.webservices.data.search.FindFoldersResults;
 import microsoft.exchange.webservices.data.search.FolderView;
 
 public class ListFoldersExample {
 
+	public static void getFolders (ExchangeService service, FolderId folderId, List<Folder> folders) throws Exception {
+        FindFoldersResults ff = service.findFolders(folderId,new FolderView(Integer.MAX_VALUE));
+        List<Folder> fff = ff.getFolders();
+        folders.addAll(fff);
+        for (Folder f : fff) {
+        	getFolders (service, f.getId(), folders);
+        }	
+	}
+	
 	public static void main(String[] args) throws Exception {
 		ExchangeService service = new ExchangeService(Dev.EXCHANGE_VERSION);
 		ExchangeCredentials credentials = new WebCredentials(Dev.EMAIL, Dev.PASSWORD);
@@ -34,14 +47,14 @@ public class ListFoldersExample {
 		PropertySet idOnly = new PropertySet(BasePropertySet.IdOnly);
         Folder root = Folder.bind(service, WellKnownFolderName.MsgFolderRoot, idOnly);
 
-        FindFoldersResults folders=service.findFolders(root.getId(),new FolderView(Integer.MAX_VALUE));
-
-        for (Folder f:folders.getFolders()) {
-            // f.getDisplayName()
-        	// f.getFolderClass()
-        }		
+		List<Folder> folders = new ArrayList<Folder>();
+		getFolders(service, root.getId(), folders);
+	
+		for (Folder folder : folders) {
+			System.out.println(folder.getDisplayName() + ": " + folder.getFolderClass());
+		}
+		
 		service.close();
-
 	}
 
 }
