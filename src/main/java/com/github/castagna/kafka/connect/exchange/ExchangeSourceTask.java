@@ -127,7 +127,7 @@ public class ExchangeSourceTask extends SourceTask {
             ChangeCollection<ItemChange> itemChanges;
 			try {
                 itemChanges = syncFolder(service, propertySet, folderId, watermarks.get(i));
-                log.info("Found {} email starting from watermark {} ...", itemChanges.getCount(), watermarks.get(i));
+                log.info("Found {} emails starting from watermark {} ...", itemChanges.getCount(), watermarks.get(i));
 
                 ArrayList<Item> items = new ArrayList<Item>();
                 for (ItemChange itemChange : itemChanges) {
