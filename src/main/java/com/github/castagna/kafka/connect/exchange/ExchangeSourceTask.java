@@ -169,7 +169,7 @@ public class ExchangeSourceTask extends SourceTask {
 	    setIfNotNull(valueStruct, "to", item.getDisplayTo());
 	    setIfNotNull(valueStruct, "cc", item.getDisplayCc());
 	    setIfNotNull(valueStruct, "subject", item.getSubject());
-	    setIfNotNull(valueStruct, "body", item.getBody());
+	    setIfNotNull(valueStruct, "body", item.getBody().toString());
 	    setIfNotNull(valueStruct, "date", item.getDateTimeSent());
 
 	    SourceRecord record = new SourceRecord(EMPTY_MAP, EMPTY_MAP, config.getTopic(), KEY_SCHEMA, keyStruct, VALUE_SCHEMA, valueStruct);
